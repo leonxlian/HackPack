@@ -1,35 +1,41 @@
-import java.util.*;
-import java.io.*;
-public class DSU {
-	int[] parents;
-	int[] rank;
-	public DSU(int size) { //constructor
-		rank = new int[size];
-		parents = new int[size];
-		Arrays.fill(rank, 0);
-		for(int i=0;i<parents.length;i++) {
-			parents[i]=i;
-		}
-	}
-	public int find(int x) {
-		if(parents[x]==x) {
-			return x;
-		}
-		return parents[x]=find(parents[x]);
-	}
-	public void union(int x, int y) {
-		int rootX=find(x);
-		int rootY=find(y);
-		if(rootX==rootY) {
-			return;
-		}
-		if(rank[rootX]>rank[rootY]) {
-			parents[rootY]=rootX;
-		}else {
-			parents[rootX]=rootY;
-			if(rank[rootX]==rank[rootY]) {
-				rank[rootY]++;
-			}
-		}
-	}
-}
+	static class DSU {
+        int[] parents;
+        int[] rank;
+        int[] setSize;
+        int numSets;
+        public DSU(int N) {
+            parents=new int[numSets=N];
+            rank=new int[N];
+            setSize=new int[N];
+            for(int i=0;i<N;i++) {
+                parents[i]=i;
+                setSize[i]=1;
+            }
+        }
+        public int find(int i) { 
+        	return parents[i] == i ? i : (parents[i] = find(parents[i])); 
+        }
+        public boolean isSameSet(int i, int j) { 
+        	return find(i) == find(j); 
+        }
+        public void union(int i,int j) {
+            if (isSameSet(i, j)) {
+            	return;
+            }
+            numSets--;
+            int x=find(i);
+            int y=find(j);
+            if(rank[x]>rank[y]) {
+                parents[y] = x; setSize[x] += setSize[y];
+            }else {
+                parents[x] = y; setSize[y] += setSize[x];
+                if(rank[x] == rank[y]) rank[y]++;
+            }
+        }
+        public int numDisjointSets() { 
+        	return numSets; 
+        }
+        public int sizeOfSet(int i) { 
+        	return setSize[find(i)]; 
+        }
+    }
