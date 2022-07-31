@@ -1,0 +1,30 @@
+ArrayDeque<Integer>q=new ArrayDeque<>();
+		int n=sc.nextInt();
+		int m=sc.nextInt();
+		int indegree[]=new int[n];
+		for (int i=0;i<m;i++){
+			int a=sc.nextInt()-1;
+			int b=sc.nextInt()-1;
+			graph.get(a).add(b);
+			indegree[b - 1]++;
+		}
+		for (int i = 0; i < n; i++){
+			// locate the nodes with indegree 0 and push them into the queue
+			if (indegree[i] == 0){
+				q.add(i);
+			}
+		}
+		ArrayList<Integer>order=new ArrayList<>();
+		while (!q.isEmpty()){
+			int cur = q.poll();
+			// add the current node to the order
+			order.add(cur);
+			for(int next:graph.get(cur)){
+				// remove the current node from the graph
+				indegree[next]--;
+				// push any new nodes with indegree 0 into the queue
+				if (indegree[next] == 0){
+					q.push(next);
+				}
+			}
+		}
