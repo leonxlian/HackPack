@@ -1,0 +1,43 @@
+/*ZERO INDEX FOR ALL PARAMETERS, BUT FENWICK TREE IS ONE INDEXED*/
+struct FenwickTree {
+    vector<int> arr;
+    FenwickTree(int size) {
+        arr.assign(size + 1, 0);
+    }
+    void update(int index, int amt) {
+        index++;
+        while (index < arr.size()) {
+            arr[index] += amt;
+            index += (index & -index);
+        }
+    }
+    void build(vector<int>& a) {
+        for (int i = 0; i < a.size(); i++) {
+            update(i, a[i]);
+        }
+    }
+    void fastBuild(vector<int>& a) {
+        for (int i = 1; i <= a.size(); i++) {
+            arr[i] += a[i - 1];
+            int index = i + (i & -i);  // next index that it contributes to
+            if (index <= a.size()) {
+                arr[index] += arr[i];
+            }
+        }
+    }
+    ll prefixSum(int index) {
+        ll res = 0;
+        index += 1;
+        while (index != 0) {
+            res += arr[index];
+            index -= (index & -index);
+        }
+        return res;
+    }
+    // 0 to n-1
+    ll prefixRange(int index1, int index2) {
+        index1--;
+        index2--;
+        return prefixSum(index2) - prefixSum(index1);
+    }
+};
