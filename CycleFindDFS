@@ -1,0 +1,21 @@
+static void dfs(int cur) {
+		path.add(cur);
+		used[cur]=1;
+    for(int neigh:al.get(cur)){
+      if(used[neigh]!=2) {
+        if(used[neigh]==1) {
+          cycles.add(new ArrayList<Integer>());
+          int id=path.size()-1;
+          while(path.get(id)!=neigh) {
+            cycles.get(cycles.size()-1).add(path.get(id));
+            id--;
+          }
+          cycles.get(cycles.size()-1).add(neigh);
+        }else {
+          dfs(neigh);
+        }
+      }
+    }
+		path.pop();
+		used[cur]=2;
+	}
