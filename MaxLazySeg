@@ -1,0 +1,71 @@
+static class SegTree{
+		int size;
+		long tree[];
+		long[] lazy;
+		public SegTree(int n) {
+			size=1;
+			while(size<n) {
+				size*=2;
+			}
+			lazy=new long[2*size];
+			tree=new long[2*size];
+		}
+		public void build(int a[]) {
+			for(int i=0;i<a.length;i++) {
+				tree[size+i]=a[i];
+			}
+			for(int i=size-1;i>=1;i--) {
+				tree[i]=tree[2*i]+tree[2*i+1];
+			}
+		}
+		public long max(int node, int node_low, int node_high, int query_low, int query_high) {
+			if(query_low<=node_low&&node_high<=query_high) {
+				return tree[node];
+			}
+			if(query_high<node_low||query_low>node_high) {
+				return Integer.MIN_VALUE;
+			}
+			push(node, node_low, node_high);
+			tree[node]=Math.max(tree[2*node], tree[2*node+1]);
+			int last_in_left=(node_low+node_high)/2;
+			return Math.max(max(2*node, node_low, last_in_left, query_low, query_high),
+					max(2*node+1, last_in_left+1, node_high, query_low, query_high));
+		}
+		//change
+		public void setRecur(int node, int node_low, int node_high, int query_low, int query_high, int v) {
+			if(query_low<=node_low&&node_high<=query_high) {
+				tree[node]=v;
+				return;
+			}
+			if(query_high<node_low||query_low>node_high) {
+				return;
+			}
+			int last_in_left=(node_low+node_high)/2;
+			setRecur(2*node, node_low, last_in_left, query_low, query_high, v);
+			setRecur(2*node+1, last_in_left+1, node_high, query_low, query_high, v);
+			tree[node]=Math.max(tree[2*node], tree[2*node+1]);
+		}
+		public void push(int node, int node_low, int node_high) {
+			if(lazy[node]>0) {
+				int last_in_left=(node_low+node_high)/2;
+				increment(2*node, node_low, last_in_left, node_low, node_high, lazy[node]);
+				increment(2*node+1, last_in_left+1, node_high, node_low, node_high, lazy[node]);
+			}
+			lazy[node]=0;
+		}
+		public void increment(int node, int node_low, int node_high, int query_low, int query_high, long amount) {
+			if(query_low<=node_low&&node_high<=query_high) {
+				tree[node]+=amount;
+				lazy[node]+=amount;
+				return;
+			}
+			if(query_low>node_high||node_low>query_high) {
+				return;
+			}
+			push(node, node_low, node_high);
+			int last_in_left=(node_low+node_high)/2;
+			increment(2*node, node_low, last_in_left, query_low, query_high, amount);
+			increment(2*node+1, last_in_left+1, node_high, query_low, query_high, amount);
+			tree[node]=Math.max(tree[2*node], tree[2*node+1]);
+		}
+	}
