@@ -1,0 +1,23 @@
+static String longestPalindromicPrefix(String str) {
+		String temp=str+'?';
+		str=reverse(str);
+		temp+=str;
+		int n=temp.length();
+		int[] lps=new int[n];
+		for(int i=1;i<n;i++) {
+			int len=lps[i-1];
+			while(len>0&&temp.charAt(len)!=temp.charAt(i)) {
+				len=lps[len-1];
+			}
+			if(temp.charAt(i)==temp.charAt(len)) {
+				len++;
+			}
+			lps[i]=len;
+		}
+		return temp.substring(0, lps[n-1]);
+	}
+	static String reverse(String s) {
+		StringBuilder str=new StringBuilder(s);
+		str.reverse();
+		return str.toString();
+	}
