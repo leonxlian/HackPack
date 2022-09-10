@@ -1,0 +1,168 @@
+import java.io.*;
+import java.util.*;
+public class ConsecutiveCuts {
+	public static PrintWriter out;
+	static int r, c;
+	public static void main(String[] args)throws IOException {
+		JS sc=new JS();
+		//out=new PrintWriter(System.out);
+	    out = new PrintWriter(new BufferedWriter(new FileWriter("ConsecutiveCutsTemp.txt")));
+	    int t=sc.nextInt();
+	    for(int tt=1;tt<=t;tt++) {
+	    	int n=sc.nextInt();
+	    	int k=sc.nextInt();
+	    	int a[]=new int[n];
+	    	for(int i=0;i<n;i++) {
+	    		a[i]=sc.nextInt();
+	    	}
+	    	int b[]=new int[n];
+	    	for(int i=0;i<n;i++) {
+	    		b[i]=sc.nextInt();
+	    	}
+	    	boolean eq=true;
+	    	for(int i=0;i<n;i++) {
+	    		if(a[i]!=b[i]) {
+	    			eq=false;
+	    		}
+	    	}
+	    	if(eq) {
+	    		if(n==2&&k%2==1) {
+	    			out.println("Case #"+tt+": "+"NO");
+	    		}else if(k==1) {
+	    			out.println("Case #"+tt+": "+"NO");
+	    		}else {
+	    			out.println("Case #"+tt+": "+"YES");
+	    		}
+	    		continue;
+	    	}else if(k==0&&!eq){
+	    		out.println("Case #"+tt+": "+"NO");
+	    		continue;
+	    	}
+	    	int idx=0;
+	    	for(int i=0;i<n;i++) {
+	    		if(a[i]==b[0]) {
+	    			idx=i;
+	    			break;
+	    		}
+	    	}
+	    	rotateLeft(a, idx, n);
+	    	boolean ans=true;
+	    	for(int i=0;i<n;i++) {
+	    		if(a[i]!=b[i]) {
+	    			ans=false;
+	    			break;
+	    		}
+	    	}
+	    	//out.println(Arrays.toString(a));
+	    	if(n==2&&ans) {
+	    		if(k%2==1) {
+	    			out.println("Case #"+tt+": "+"YES");
+	    		}else {
+	    			out.println("Case #"+tt+": "+"NO");
+	    		}
+	    		continue;
+	    	}
+	    	if(ans) {
+	    		out.println("Case #"+tt+": "+"YES");
+	    	}else {
+	    		out.println("Case #"+tt+": "+"NO");
+	    	}
+	    }
+	    out.close();
+	}
+	static void rotateLeft(int arr[], int d, int n) {
+		int temp[]=new int[d];
+		for(int i=0;i<d;i++) {
+			temp[i]=arr[i];
+		}
+		for(int i=d;i<n;i++) {
+			arr[i-d]=arr[i];
+		}
+		for(int i=0;i<d;i++) {
+			arr[i+n-d]=temp[i];
+		}
+	}
+	static class JS {
+	    public int BS = 1<<16;
+	    public char NC = (char)0;
+	    byte[] buf = new byte[BS];
+	    int bId = 0, size = 0;
+	    char c = NC;
+	    double num = 1;
+	    BufferedInputStream in;
+
+	    public JS() {
+	        in = new BufferedInputStream(System.in, BS);
+	    }
+
+	    public JS(String s) throws FileNotFoundException {
+	        in = new BufferedInputStream(new FileInputStream(new File(s)), BS);
+	    }
+
+	    public char nextChar(){
+	        while(bId==size) {
+	            try {
+	                size = in.read(buf);
+	            }catch(Exception e) {
+	                return NC;
+	            }
+	            if(size==-1)return NC;
+	            bId=0;
+	        }
+	        return (char)buf[bId++];
+	    }
+
+	    public int nextInt() {
+	        return (int)nextLong();
+	    }
+
+	    public long nextLong() {
+	        num=1;
+	        boolean neg = false;
+	        if(c==NC)c=nextChar();
+	        for(;(c<'0' || c>'9'); c = nextChar()) {
+	            if(c=='-')neg=true;
+	        }
+	        long res = 0;
+	        for(; c>='0' && c <='9'; c=nextChar()) {
+	            res = (res<<3)+(res<<1)+c-'0';
+	            num*=10;
+	        }
+	        return neg?-res:res;
+	    }
+
+	    public double nextDouble() {
+	        double cur = nextLong();
+	        return c!='.' ? cur:cur+nextLong()/num;
+	    }
+
+	    public String next() {
+	        StringBuilder res = new StringBuilder();
+	        while(c<=32)c=nextChar();
+	        while(c>32) {
+	            res.append(c);
+	            c=nextChar();
+	        }
+	        return res.toString();
+	    }
+
+	    public String nextLine() {
+	        StringBuilder res = new StringBuilder();
+	        while(c<=32)c=nextChar();
+	        while(c!='\n') {
+	            res.append(c);
+	            c=nextChar();
+	        }
+	        return res.toString();
+	    }
+
+	    public boolean hasNext() {
+	        if(c>32)return true;
+	        while(true) {
+	            c=nextChar();
+	            if(c==NC)return false;
+	            else if(c>32)return true;
+	        }
+	    }
+	}
+}
