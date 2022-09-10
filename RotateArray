@@ -1,0 +1,24 @@
+static void rotateLeft(int arr[], int d, int n) {
+		int temp[]=new int[d];
+		for(int i=0;i<d;i++) {
+			temp[i]=arr[i];
+		}
+		for(int i=d;i<n;i++) {
+			arr[i-d]=arr[i];
+		}
+		for(int i=0;i<d;i++) {
+			arr[i+n-d]=temp[i];
+		}
+	}
+  static void rotateRight(int arr[], int d, int n) {
+		int temp[]=new int[n-d];
+		for(int i=0;i<n-d;i++) {
+			temp[i]=arr[i];
+		}
+		for(int i=n-d;i<n;i++) {
+			arr[i-n+d]=arr[i];
+		}
+		for(int i=0;i<n-d;i++) {
+			arr[i+d]=temp[i];
+		}
+	}
