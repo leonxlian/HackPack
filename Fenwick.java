@@ -56,7 +56,7 @@ public class Fenwick {
 			}
 			return res;
 		}
-		//0 to n-1
+		//0 to n-1, normal prefix sums
 		public long prefixRange(int index1, int index2) {
 			index1--;
 			index2--;
