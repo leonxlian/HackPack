@@ -1,0 +1,10 @@
+	static void add(TreeMap<Long,Integer> A, long key){
+		A.put(key,A.getOrDefault(key,0)+1);
+	}
+	static void remove(TreeMap<Long,Integer>A, long key){
+		if(!A.containsKey(key))return;
+		A.put(key,A.get(key)-1);
+		if(A.get(key)==0){
+			A.remove(key);
+		}
+	}
