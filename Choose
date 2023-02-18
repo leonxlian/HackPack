@@ -1,0 +1,28 @@
+	static long f[];
+	static long inv[];
+	static int MOD=(int) (1e9+7);
+  public static long power(long a, long b, int mod) {
+		long res=1;
+		while(b!=0) {
+			if(b%2==1) {
+				res=(res*a)%mod;
+			}
+			a=(a*a)%mod;
+			b/=2;
+		}
+		return res;
+	}
+	static long inv(long a) {
+		return power(a, MOD-2, MOD);
+	}
+	static long C(int n, int m) {
+		return f[n] * inv[m] % MOD * inv[n-m] % MOD;
+	}
+	static void calculate(int N) {
+		f[0]=1;
+		inv[0]=1;
+		for(int i=1;i<N;i++) {
+			f[i]=(i*f[i-1])%MOD;
+			inv[i]=inv(f[i]);
+		}
+	}
