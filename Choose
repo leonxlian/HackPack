@@ -1,7 +1,7 @@
 	static long f[];
 	static long inv[];
 	static int MOD=(int) (1e9+7);
-  public static long power(long a, long b, int mod) {
+	public static long power(long a, long b, int mod) {
 		long res=1;
 		while(b!=0) {
 			if(b%2==1) {
@@ -19,9 +19,11 @@
 		return f[n] * inv[m] % MOD * inv[n-m] % MOD;
 	}
 	static void calculate(int N) {
+        f=new long[N+1];
+        inv=new long[N+1];
 		f[0]=1;
 		inv[0]=1;
-		for(int i=1;i<N;i++) {
+		for(int i=1;i<=N;i++) {
 			f[i]=(i*f[i-1])%MOD;
 			inv[i]=inv(f[i]);
 		}
