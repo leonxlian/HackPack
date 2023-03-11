@@ -1,27 +1,4 @@
-import java.io.*;
-import java.util.*;
-public class Fenwick {
-	private static PrintWriter out;
-	public static void main(String[] args)throws IOException{
-		Scanner sc=new Scanner();
-		out=new PrintWriter(System.out);
-		int n=sc.nextInt();
-		FenwickTree ft=new FenwickTree(n);
-		int a[]=new int[n];
-		for(int i=0;i<n;i++) {
-			a[i]=sc.nextInt();
-		}
-		//ft.build(a);
-		ft.fastBuild(a);
-		for(int i=1;i<=n;i++) {
-			out.println(ft.arr[i]);
-		}
-		for(int i=0;i<n;i++) {
-			out.println(ft.prefixRange(0, 1));
-		}
-		out.close();
-	}
-	static class FenwickTree{
+static class FenwickTree{
 		int arr[];
 		public FenwickTree(int size) {
 			arr=new int[size+1];
@@ -47,6 +24,7 @@ public class Fenwick {
 				}
 			}
 		}
+		//inclusive from 0 to index
 		public long prefixSum(int index){
 			long res=0;
 			index+=1;
@@ -56,59 +34,10 @@ public class Fenwick {
 			}
 			return res;
 		}
-		//0 to n-1, normal prefix sums
+		//0 to n, normal prefix sums
 		public long prefixRange(int index1, int index2) {
 			index1--;
 			index2--;
 			return prefixSum(index2)-prefixSum(index1);
 		}
 	}
-	/*
-	 * 1 2 3 4 5 6
-	 * 1   3   5
-	 *   3      11
-	 *       10
-	 *   
-	 */
-	public static class Scanner {
-	    BufferedReader br;
-	    StringTokenizer st;
-	
-	    public Scanner() {
-	        br = new BufferedReader(new InputStreamReader(System.in));
-	    }
-
-	    String next() {
-	        while (st == null || !st.hasMoreElements()) {
-	            try {
-	                st = new StringTokenizer(br.readLine());
-	            } catch (IOException e) {
-	                e.printStackTrace();
-	            }
-	        }
-	        return st.nextToken();
-	    }
-	
-	    int nextInt() {
-	        return Integer.parseInt(next());
-	    }
-	
-	    long nextLong() {
-	        return Long.parseLong(next());
-	    }
-	
-	    double nextDouble() {
-	        return Double.parseDouble(next());
-	    }
-	
-	    String nextLine(){
-	        String str = "";
-	        try {
-	            str = br.readLine();
-	        } catch (IOException e) {
-	            e.printStackTrace();
-	        }
-	        return str;
-	    }
-	}
-}
