@@ -1,0 +1,46 @@
+template<typename T>
+struct lazy_monotonic_stack {
+	std::stack<std::tuple<T, T, T>> stk;
+ 
+public:
+	void push(T x) { stk.emplace(x, stk.empty() ? x : std::max(query(), x), 0); }
+ 
+	void update(T x) { if (!stk.empty()) std::get<2>(stk.top()) += x; }
+ 
+	T top() { return std::get<0>(stk.top()) + std::get<2>(stk.top()); }
+ 
+	T query() { return stk.empty() ? std::numeric_limits<T>::min() : std::get<1>(stk.top()) + std::get<2>(stk.top()); }
+ 
+	void pop() { T x = std::get<2>(stk.top()); stk.pop(), update(x); }
+ 
+	int size() { return stk.size(); }
+ 
+	bool empty() { return stk.empty(); }
+};
+ 
+template<typename T>
+struct lazy_monotonic_queue {
+	lazy_monotonic_stack<T> stk1, stk2;
+ 
+	void shift() { 
+		if (!stk2.empty())
+			return;
+		while (!stk1.empty()) {
+			stk2.push(stk1.top());
+			stk1.pop();
+		}
+	}
+ 
+public:
+	void push(T x) { stk1.push(x); }
+ 
+	void update(T x) { stk1.update(x), stk2.update(x); }
+ 
+	T query() { return std::max(stk1.query(), stk2.query()); }
+ 
+	void pop() { shift(), stk2.pop(); }
+ 
+	int size() { return stk1.size() + stk2.size(); }
+ 
+	bool empty() { return stk1.empty() && stk2.empty(); }
+};
