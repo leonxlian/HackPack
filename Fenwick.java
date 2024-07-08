@@ -1,9 +1,9 @@
-	/*
+/*
 	prefix sums:
-	if i want from l to r (1 indexed) inclusive do r, l-1
+	if i want from l to r (1 indexed) inclusive do pre[r], pre[l-1]
 	*/
 	/*fenwickTree
-	if i want from l to r (0 indexed) inclusive do r+1, l
+	if i want from l to r (0 indexed) inclusive do r+1, l //use this one, as it will always start from 0
 	if i want from l to r (1 indexed) inclusive do r, l-1
 	 */
 	static class FenwickTree{
