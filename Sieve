@@ -21,7 +21,7 @@
 	    return pr;
 	}
 	/*
-	 * gets all primes from 1 to n
+	 * gets all primes from 1 to n in O(nloglogn)
 	 */
 	public static ArrayList<Integer> sieve(int n) {
         boolean[] isPrime = new boolean[n + 1];
