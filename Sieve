@@ -1,4 +1,4 @@
-	/*
+/*
 	 * gets all primes from 1 to n in O(n), gets smallest prime factor of each number
 	 */
 	static ArrayList<Integer> linearSieve(int N){
