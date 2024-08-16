@@ -1,7 +1,7 @@
 	/*
 	 * gets all primes from 1 to n in O(n), gets smallest prime factor of each number
 	 */
-static ArrayList<Integer> linearSieve(int N){
+	static ArrayList<Integer> linearSieve(int N){
 		int[] lp = new int[N + 1];
 	    ArrayList<Integer> pr = new ArrayList<>();
 
@@ -19,11 +19,11 @@ static ArrayList<Integer> linearSieve(int N){
 	        }
 	    }
 	    return pr;
-}
+	}
 	/*
-	 * gets all primes from 1 to n in O(nloglogn)
+	 * gets all primes from 1 to n
 	 */
-public static ArrayList<Integer> sieve(int n) {
+	public static ArrayList<Integer> sieve(int n) {
         boolean[] isPrime = new boolean[n + 1];
         Arrays.fill(isPrime, true);
         isPrime[0]=isPrime[1]=false;
@@ -41,4 +41,4 @@ public static ArrayList<Integer> sieve(int n) {
             }
         }
         return primes;
-}
+    }
