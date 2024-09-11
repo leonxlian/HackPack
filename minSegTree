@@ -1,0 +1,50 @@
+	static class minSegTree{
+		int size;
+		long tree[];
+		public minSegTree(int n) {
+			size=1;
+			while(size<n) {
+				size*=2;
+			}
+			tree=new long[2*size];
+			for(int i=0;i<tree.length;i++) {
+				tree[i]=Integer.MAX_VALUE;
+			}
+		}
+		public void build(int a[]) {
+//			for(int i=0;i<a.length;i++) {
+//				tree[size+i]=a[i];
+//			}
+//			for(int i=size-1;i>=1;i--) {
+//				tree[i]=Math.min(tree[2*i], tree[2*i+1]);
+//			}
+//			for(int i=0;i<a.length;i++) {
+//				tree[i]=Integer.MAX_VALUE;
+//			}
+		}
+		public long min(int node, int node_low, int node_high, int query_low, int query_high) {
+			if(query_low<=node_low&&node_high<=query_high) {
+				return tree[node];
+			}
+			if(query_high<node_low||query_low>node_high) {
+				return Integer.MAX_VALUE;
+			}
+			int last_in_left=(node_low+node_high)/2;
+			return Math.min(min(2*node, node_low, last_in_left, query_low, query_high),
+					min(2*node+1, last_in_left+1, node_high, query_low, query_high));
+		}
+		//change
+		public void setRecur(int node, int node_low, int node_high, int query_low, int query_high, int v) {
+			if(query_low<=node_low&&node_high<=query_high) {
+				tree[node]=v;
+				return;
+			}
+			if(query_high<node_low||query_low>node_high) {
+				return;
+			}
+			int last_in_left=(node_low+node_high)/2;
+			setRecur(2*node, node_low, last_in_left, query_low, query_high, v);
+			setRecur(2*node+1, last_in_left+1, node_high, query_low, query_high, v);
+			tree[node]=Math.min(tree[2*node], tree[2*node+1]);
+		}
+	}
