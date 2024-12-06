@@ -9,3 +9,5 @@ int[] xx = Arrays.copyOf(x, n);
                 x[i] = Arrays.binarySearch(xx, x[i]);
                 y[i] = Arrays.binarySearch(yy, y[i]);
             }
+// to go from coordinate to index->use x[i] to get its respective index
+// to go from index to coordinate->use xx[compressed index] to get its coordinate
