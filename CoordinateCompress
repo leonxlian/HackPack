@@ -1,0 +1,11 @@
+int[] xx = Arrays.copyOf(x, n);
+            int[] yy = Arrays.copyOf(y, n);
+            //stores distinct x and y coordinates
+            xx = Arrays.stream(xx).distinct().sorted().toArray();
+            yy = Arrays.stream(yy).distinct().sorted().toArray();
+            
+            for (int i = 0; i < n; i++) {
+            	//get the distinct x and y coordinate -> distinct index for compression
+                x[i] = Arrays.binarySearch(xx, x[i]);
+                y[i] = Arrays.binarySearch(yy, y[i]);
+            }
