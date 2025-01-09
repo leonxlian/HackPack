@@ -1,0 +1,52 @@
+static class Kosarju {
+		Stack<Integer> stk;
+		boolean vis[];
+		ArrayList<ArrayList<Integer>>graph1;
+		ArrayList<ArrayList<Integer>>graph2;
+		int numComponents;
+		ArrayList<ArrayList<Integer>>components;
+		int[] component;
+		public Kosarju(ArrayList<ArrayList<Integer>>g1, ArrayList<ArrayList<Integer>>g2, int n) {
+			stk=new Stack<Integer>();
+			components=new ArrayList<>();
+			component=new int[n];
+			graph1=g1;
+			graph2=g2;
+			vis=new boolean[n];
+			for(int i=0;i<n;i++) {
+				if(!vis[i]) {
+					dfs1(i);
+				}
+			}
+			for(int i=0;i<n;i++) {
+				vis[i]=false;
+			}
+			while(!stk.isEmpty()) {
+				int cur=stk.pop();
+				if(!vis[cur]) {
+					components.add(new ArrayList<>());
+					dfs2(cur);
+					numComponents++;
+				}
+			}
+		}
+		public void dfs1(int curNode) {
+			vis[curNode]=true;
+	        for(int next:graph1.get(curNode)) {
+	            if(!vis[next]) {
+	            	dfs1(next);
+	            }
+	        }
+	        stk.push(curNode);
+		}
+		public void dfs2(int curNode) {
+			component[curNode]=numComponents;
+			components.get(numComponents).add(curNode);
+			vis[curNode]=true;
+			for(int next:graph2.get(curNode)) {
+	            if(!vis[next]) {
+	            	dfs2(next);
+	            }
+	        }
+		}
+	}
