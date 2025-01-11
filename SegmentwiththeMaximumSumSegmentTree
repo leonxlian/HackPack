@@ -1,0 +1,62 @@
+static class SegTree{
+		int size;
+		long sum[];
+		long maxPref[];
+		long maxSuf[];
+		long maxSeg[];
+		public SegTree(int n) {
+			size=1;
+			while(size<n) {
+				size*=2;
+			}
+			sum=new long[2*size];
+			maxPref=new long[2*size];
+			maxSuf=new long[2*size];
+			maxSeg=new long[2*size];
+		}
+		public void build(long a[]) {
+			for(int i=0;i<a.length;i++) {
+				sum[size+i]=a[i];
+				maxSeg[size+i]=Math.max(a[i], 0);
+				maxPref[size+i]=Math.max(a[i], 0);
+				maxSuf[size+i]=Math.max(a[i], 0);
+			}
+			for(int i=size-1;i>=1;i--) {
+				sum[i]=sum[2*i]+sum[2*i+1];
+				maxSeg[i]=Math.max(maxSeg[2*i], Math.max(maxSeg[2*i+1], Math.max(maxSuf[2*i]+maxPref[2*i+1], 0)));
+				maxPref[i]=Math.max(sum[2*i]+maxPref[2*i+1], Math.max(maxPref[2*i], 0));
+				maxSuf[i]=Math.max(sum[2*i+1]+maxSuf[2*i], Math.max(maxSuf[2*i+1], 0));
+			}
+		}
+		public long findMax(int node, int node_low, int node_high, int query_low, int query_high) {//query?
+			if(query_low<=node_low&&node_high<=query_high) {
+				return maxSeg[node];
+			}
+			if(query_high<node_low||query_low>node_high) {
+				return Long.MIN_VALUE;
+			}
+			int last_in_left=(node_low+node_high)/2;
+			return Math.max(findMax(2*node, node_low, last_in_left, query_low, query_high), 
+					findMax(2*node+1, last_in_left+1, node_high, query_low, query_high));
+		}
+		//change
+		public void setRecur(int node, int node_low, int node_high, int query_low, int query_high, int v) {
+			if(query_low<=node_low&&node_high<=query_high) {
+				maxPref[node]=Math.max(v, 0);
+				maxSuf[node]=Math.max(v, 0);
+				sum[node]=v;
+				maxSeg[node]=Math.max(v, 0);
+				return;
+			}
+			if(query_high<node_low||query_low>node_high) {
+				return;
+			}
+			int last_in_left=(node_low+node_high)/2;
+			setRecur(2*node, node_low, last_in_left, query_low, query_high, v);
+			setRecur(2*node+1, last_in_left+1, node_high, query_low, query_high, v);
+			sum[node]=sum[2*node]+sum[2*node+1];
+			maxSeg[node]=Math.max(maxSeg[2*node], Math.max(maxSeg[2*node+1], Math.max(maxSuf[2*node]+maxPref[2*node+1], 0)));
+			maxPref[node]=Math.max(sum[2*node]+maxPref[2*node+1], Math.max(maxPref[2*node], 0));
+			maxSuf[node]=Math.max(sum[2*node+1]+maxSuf[2*node], Math.max(maxSuf[2*node+1], 0));
+		}
+	}
