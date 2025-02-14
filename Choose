@@ -1,3 +1,4 @@
+static long ctl[];
 	static long f[];
 	static long inv[];
 	static int MOD=(int) (1e9+7);
@@ -26,5 +27,11 @@
 		for(int i=1;i<=N;i++) {
 			f[i]=(i*f[i-1])%MOD;
 			inv[i]=inv(f[i]);
+		}
+	}
+	static void calculateCatalan(int N) {//for this you need to do 2*N+2 for calculate
+		ctl=new long[N+1];
+		for(int i=0;i<=N;i++) {
+			ctl[i]=(f[2*i]*(inv((f[i+1]*f[i])%MOD)))%MOD;
 		}
 	}
