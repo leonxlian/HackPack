@@ -1,0 +1,227 @@
+import java.io.*;
+import java.util.*;
+public class SonyaandHotels {
+	public static PrintWriter out;
+    static ArrayList<ArrayList<Integer>>al;
+	public static void main(String[] args)throws IOException{
+        JS sc=new JS();
+        out=new PrintWriter(System.out);
+        int t=1;
+        outer: while(t-->0) {
+            int n=sc.nextInt();
+            int d=sc.nextInt();
+            HashSet<Long>hs=new HashSet<>();
+            long a[]=new long[n];
+            for(int i=0;i<n;i++) {
+                a[i]=sc.nextLong();
+            }
+            hs.add(a[0]-d);
+            hs.add(a[n-1]+d);
+            for(int i=0;i<n-1;i++) {
+                long forward = a[i] + d;
+                if(forward <= a[i+1] - d) {
+                    hs.add(forward);
+                }
+            }
+            for(int i=n-1;i>0;i--) {
+                long backward = a[i] - d;
+                if(backward >= a[i-1] + d) {
+                    hs.add(backward);
+                }
+            }
+            out.println(hs.size());
+        }
+        out.println();
+        out.close();
+	}
+	static void add(HashMap<Integer,Integer> A, int key){
+		A.put(key,A.getOrDefault(key,0)+1);
+	}
+	static void remove(HashMap<Integer,Integer>A, int key){
+		if(!A.containsKey(key))return;
+		A.put(key,A.get(key)-1);
+		if(A.get(key)==0){
+			A.remove(key);
+		}
+	}
+	static long ctl[];
+	static long f[];
+	static long inv[];
+	static int MOD=998244353;
+	public static long power(long a, long b, int mod) {
+		long res=1;
+		while(b!=0) {
+			if(b%2==1) {
+				res=(res*a)%mod;
+			}
+			a=(a*a)%mod;
+			b/=2;
+		}
+		return res;
+	}
+	static long inv(long a) {
+		return power(a, MOD-2, MOD);
+	}
+	static long C(int n, int m) {
+		return f[n] * inv[m] % MOD * inv[n-m] % MOD;
+	}
+	static void calculate(int N) {
+        f=new long[N+1];
+        inv=new long[N+1];
+		f[0]=1;
+		inv[0]=1;
+		for(int i=1;i<=N;i++) {
+			f[i]=(i*f[i-1])%MOD;
+			inv[i]=inv(f[i]);
+		}
+	}
+	static void calculateCatalan(int N) {//for this you need to do 2*N+2 for calculate
+		ctl=new long[N+1];
+		for(int i=0;i<=N;i++) {
+			ctl[i]=(f[2*i]*(inv((f[i+1]*f[i])%MOD)))%MOD;
+		}
+	}
+	static void rotateLeft(int arr[], int d, int n) {
+		int temp[]=new int[d];
+		for(int i=0;i<d;i++) {
+			temp[i]=arr[i];
+		}
+		for(int i=d;i<n;i++) {
+			arr[i-d]=arr[i];
+		}
+		for(int i=0;i<d;i++) {
+			arr[i+n-d]=temp[i];
+		}
+	}
+  static void rotateRight(int arr[], int d, int n) {
+		int temp[]=new int[n-d];
+		for(int i=0;i<n-d;i++) {
+			temp[i]=arr[i];
+		}
+		for(int i=n-d;i<n;i++) {
+			arr[i-n+d]=arr[i];
+		}
+		for(int i=0;i<n-d;i++) {
+			arr[i+d]=temp[i];
+		}
+	}
+	public static long gcd(long a, long b) {
+        if(a > b)
+            a = (a+b)-(b=a);
+        if(a == 0L)
+            return b;
+        return gcd(b%a, a);
+    }
+	static class Pair implements Comparable<Pair>{
+		int x;
+		int y;
+		public Pair(int x, int y) {
+			this.x=x;this.y=y;
+		}
+		public int compareTo(Pair p) {
+			return Integer.compare(x, p.x);
+		}
+	}
+	static class Triple implements Comparable<Triple>{
+		int a, b, c;
+		public Triple(int a, int b, int c) {
+			this.a=a;this.b=b;this.c=c;
+		}
+		public int compareTo(Triple tr) {
+			return Integer.compare(a, tr.a);
+		}
+	}
+	static void sort(int a[]) {
+		ArrayList<Integer>al=new ArrayList<>();
+		for(int i=0;i<a.length;i++) {
+			al.add(a[i]);
+		}
+		Collections.sort(al);
+		for(int i=0;i<a.length;i++) {
+			a[i]=al.get(i);
+		}
+	}
+	static class JS {
+	    public int BS = 1<<16;
+	    public char NC = (char)0;
+	    byte[] buf = new byte[BS];
+	    int bId = 0, size = 0;
+	    char c = NC;
+	    double num = 1;
+	    BufferedInputStream in;
+
+	    public JS() {
+	        in = new BufferedInputStream(System.in, BS);
+	    }
+
+	    public JS(String s) throws FileNotFoundException {
+	        in = new BufferedInputStream(new FileInputStream(new File(s)), BS);
+	    }
+
+	    public char nextChar(){
+	        while(bId==size) {
+	            try {
+	                size = in.read(buf);
+	            }catch(Exception e) {
+	                return NC;
+	            }
+	            if(size==-1)return NC;
+	            bId=0;
+	        }
+	        return (char)buf[bId++];
+	    }
+
+	    public int nextInt() {
+	        return (int)nextLong();
+	    }
+
+	    public long nextLong() {
+	        num=1;
+	        boolean neg = false;
+	        if(c==NC)c=nextChar();
+	        for(;(c<'0' || c>'9'); c = nextChar()) {
+	            if(c=='-')neg=true;
+	        }
+	        long res = 0;
+	        for(; c>='0' && c <='9'; c=nextChar()) {
+	            res = (res<<3)+(res<<1)+c-'0';
+	            num*=10;
+	        }
+	        return neg?-res:res;
+	    }
+
+	    public double nextDouble() {
+	        double cur = nextLong();
+	        return c!='.' ? cur:cur+nextLong()/num;
+	    }
+
+	    public String next() {
+	        StringBuilder res = new StringBuilder();
+	        while(c<=32)c=nextChar();
+	        while(c>32) {
+	            res.append(c);
+	            c=nextChar();
+	        }
+	        return res.toString();
+	    }
+
+	    public String nextLine() {
+	        StringBuilder res = new StringBuilder();
+	        while(c<=32)c=nextChar();
+	        while(c!='\n') {
+	            res.append(c);
+	            c=nextChar();
+	        }
+	        return res.toString();
+	    }
+
+	    public boolean hasNext() {
+	        if(c>32)return true;
+	        while(true) {
+	            c=nextChar();
+	            if(c==NC)return false;
+	            else if(c>32)return true;
+	        }
+	    }
+	}
+}
