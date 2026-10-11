@@ -1,0 +1,164 @@
+static class SegTree{
+		int size;
+		long tree[];
+		long[] lazy;
+		public SegTree(int n) {
+			size=1;
+			while(size<n) {
+				size*=2;
+			}
+			lazy=new long[2*size];
+			tree=new long[2*size];
+            Arrays.fill(tree, Integer.MIN_VALUE);
+		}
+		public void build(int a[]) {
+			for(int i=0;i<a.length;i++) {
+				tree[size+i]=a[i];
+			}
+			for(int i=size-1;i>=1;i--) {
+				tree[i]=Math.max(tree[2*i], tree[2*i+1]);
+			}
+		}
+		public long max(int node, int node_low, int node_high, int query_low, int query_high) {
+			if(query_low<=node_low&&node_high<=query_high) {
+				return tree[node];
+			}
+			if(query_high<node_low||query_low>node_high) {
+				return 0;
+			}
+			push(node, node_low, node_high);
+			tree[node]=Math.max(tree[2*node], tree[2*node+1]);
+			int last_in_left=(node_low+node_high)/2;
+			return Math.max(max(2*node, node_low, last_in_left, query_low, query_high),
+					max(2*node+1, last_in_left+1, node_high, query_low, query_high));
+		}
+		//change
+		public void setRecur(int node, int node_low, int node_high, int query_low, int query_high, int v) {
+			if(query_low<=node_low&&node_high<=query_high) {
+				tree[node]=v;
+				return;
+			}
+			if(query_high<node_low||query_low>node_high) {
+				return;
+			}
+			int last_in_left=(node_low+node_high)/2;
+			setRecur(2*node, node_low, last_in_left, query_low, query_high, v);
+			setRecur(2*node+1, last_in_left+1, node_high, query_low, query_high, v);
+			tree[node]=Math.max(tree[2*node], tree[2*node+1]);
+		}
+		public void push(int node, int node_low, int node_high) {
+			if(lazy[node]!=0) {
+				int last_in_left=(node_low+node_high)/2;
+				increment(2*node, node_low, last_in_left, node_low, node_high, lazy[node]);
+				increment(2*node+1, last_in_left+1, node_high, node_low, node_high, lazy[node]);
+			}
+			lazy[node]=0;
+		}
+		public void increment(int node, int node_low, int node_high, int query_low, int query_high, long amount) {
+			if(query_low<=node_low&&node_high<=query_high) {
+				tree[node]+=amount;
+				lazy[node]+=amount;
+				return;
+			}
+			if(query_low>node_high||node_low>query_high) {
+				return;
+			}
+			push(node, node_low, node_high);
+			int last_in_left=(node_low+node_high)/2;
+			increment(2*node, node_low, last_in_left, query_low, query_high, amount);
+			increment(2*node+1, last_in_left+1, node_high, query_low, query_high, amount);
+			tree[node]=Math.max(tree[2*node], tree[2*node+1]);
+		}
+        public void removeBad(int node, int node_low, int node_high) {
+            if(node_low==node_high) {
+                tree[node]=Integer.MIN_VALUE;
+                return;
+            }
+            push(node, node_low, node_high);
+            int last_in_left=(node_low+node_high)/2;
+            if(tree[2*node]==tree[node]) {
+                removeBad(2*node, node_low, last_in_left);
+            }else {
+                removeBad(2*node+1, last_in_left+1, node_high);
+            }
+            tree[node]=Math.max(tree[2*node], tree[2*node+1]);
+            lazy[node]=0;
+        }
+        public void visualizeTree() {
+            System.out.println("SEGMENT TREE:");
+            visualizeArray(tree, true);
+        }
+        
+        public void visualizeLazy() {
+            System.out.println("LAZY TREE:");
+            visualizeArray(lazy, false);
+        }
+        
+        private void visualizeArray(long[] array, boolean isTree) {
+            int height = Integer.numberOfTrailingZeros(size);
+        
+            // Find enough width for every printed value.
+            int cellWidth = 5;
+            for (int i = 1; i < 2 * size; i++) {
+                String value;
+        
+                if (isTree && array[i] == Integer.MIN_VALUE) {
+                    value = "-INF";
+                } else {
+                    value = Long.toString(array[i]);
+                }
+        
+                cellWidth = Math.max(cellWidth, value.length() + 2);
+            }
+        
+            int leafPitch = cellWidth + 2;
+        
+            for (int level = 0; level <= height; level++) {
+                int firstNode = 1 << level;
+                int nodesOnLevel = 1 << level;
+                int leafSpan = size >> level;
+        
+                StringBuilder line = new StringBuilder();
+                int currentPosition = 0;
+        
+                for (int j = 0; j < nodesOnLevel; j++) {
+                    int node = firstNode + j;
+        
+                    String value;
+                    if (isTree && array[node] == Integer.MIN_VALUE) {
+                        value = "-INF";
+                    } else {
+                        value = Long.toString(array[node]);
+                    }
+        
+                    /*
+                     * Find the center of the leaves represented by this node.
+                     *
+                     * For example:
+                     *
+                     *                  root
+                     *          left             right
+                     *      leaf leaf         leaf leaf
+                     */
+                    int center =
+                            j * leafSpan * leafPitch
+                            + ((leafSpan - 1) * leafPitch) / 2
+                            + cellWidth / 2;
+        
+                    int startPosition = center - value.length() / 2;
+        
+                    while (currentPosition < startPosition) {
+                        line.append(' ');
+                        currentPosition++;
+                    }
+        
+                    line.append(value);
+                    currentPosition += value.length();
+                }
+        
+                System.out.println(line);
+            }
+        
+            System.out.println();
+        }
+	}
