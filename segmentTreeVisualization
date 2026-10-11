@@ -27,7 +27,6 @@ static class SegTree{
 				return 0;
 			}
 			push(node, node_low, node_high);
-			tree[node]=Math.max(tree[2*node], tree[2*node+1]);
 			int last_in_left=(node_low+node_high)/2;
 			return Math.max(max(2*node, node_low, last_in_left, query_low, query_high),
 					max(2*node+1, last_in_left+1, node_high, query_low, query_high));
