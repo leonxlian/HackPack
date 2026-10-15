@@ -76,7 +76,7 @@ public class LazySeg {
 			tree[node]=tree[2*node]+tree[2*node+1];
 		}
 		public void push(int node, int node_low, int node_high) {
-			if(lazy[node]>0) {
+			if(lazy[node]!=0) {
 				int last_in_left=(node_low+node_high)/2;
 				increment(2*node, node_low, last_in_left, node_low, node_high, lazy[node]);
 				increment(2*node+1, last_in_left+1, node_high, node_low, node_high, lazy[node]);
